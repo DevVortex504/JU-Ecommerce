@@ -13,9 +13,18 @@
                             {% endif %}
                             <div class="listing-text">
                                 <h5>{{ listing.title }}</h5>
+                                {% if listing.description %}
+                                <p class="index-listing-description">
+                                    {{ listing.description }}
+                                </p>
+                                {% endif %}
                                 <p>
-                                    ₹<span class="index-listing-price">{{ listing.price }}</span>
-                                    <span> M.R.P: <span class="mrp">₹5999</span></span>
+                                    {% if listing.discounted_price %}
+                                    ₹<span class="index-listing-price">{{listing.discounted_price}}</span>
+                                    <span><span class="mrp">₹{{listing.price}}</span></span>
+                                    {% else %}
+                                    ₹<span class="index-listing-price">{{listing.price}}</span>
+                                    {% endif %}
                                 </p>
                             </div>          
                     </a>

@@ -3,23 +3,30 @@
 {% block body %}
     
 <div class="listing-body">
-    <h2>{{listing.title}}</h2>
-    {% if listing.active_status == False %}
-        <h4>Listing is closed</h4>
-    {% endif %}
-
-    <ul>
-            {% if listing.listing_image %}
-                <img src="{{ listing.listing_image.url }}" style="width:50% ; float: left; margin-left: 5px;">
+    <div class="listing-image-container">
+        {% if listing.listing_image %}
+            <img src="{{ listing.listing_image.url }}">
+        {% endif %}
+        {% if listing.active_status == False %}
+            <h4 class="status-text">Out of Stock</h4>
+        {% endif %}
+        </br>
+    </div>
+        
+    <div class="listing-content-container">
+        <h2>{{listing.title}}</h2>
+        <p class="listing-description">{{listing.description}}</p>
+        <p>
+            {% if listing.discounted_price %}
+            ₹<span class="index-listing-price">{{listing.discounted_price}}</span>
+            <span><span class="mrp">₹{{listing.price}}</span></span>
+            {% else %}
+            ₹<span class="index-listing-price">{{listing.price}}</span>
             {% endif %}
-            </br>
-
-        <div class="listing-content-container">
-            <li><strong>Starting Bid: </strong>${{listing.start_bid}}</li>
-            <li><strong>Listed By: </strong>{{listing.user}}</li>
-            <li><strong>Category: </strong>{{listing.category}}</li>
-
-            {% if request.user.is_authenticated and listing.active_status %}
+        </p>
+        <p><strong>Category: </strong>{{listing.category}}</p>
+        <p>
+            {% if request.user.is_authenticated %}
                     {% if watchlist %}
                     <a href="{% url 'watchlist_remove' listing.id %}">Remove from Watchlist</a>
                     {% else %}
@@ -28,27 +35,28 @@
             {% elif listing.active_status %}
             Sign in to Watchlist.
             {% endif %}
-
-            <li><strong>Comments: </strong></li>
-            {% if comments %}
-            {% for comment in comments %}
-                <li><p>{{comment.user}}: {{comment.content}}</p></li>
-            {% endfor %}
-            {% else %}
-                <li><p>No comments</p></li>
-            {% endif %}
-            {% if request.user.is_authenticated %}
-            <div>            
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="content" placeholder="Type here">
-                    <input type="submit" value="Comment"></input>
-                </form>
-            </div>
-            {% endif %}
-            <br>
-        </div>
-    </ul>
+        </p>
+        <br>
+    </div>
+</div>
+<div class="reviews">
+    <li><strong>Comments: </strong></li>
+    {% if comments %}
+    {% for comment in comments %}
+        <li><p>{{comment.user}}: {{comment.content}}</p></li>
+    {% endfor %}
+    {% else %}
+        <li><p>No comments</p></li>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+    <div>            
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="content" placeholder="Type here">
+            <input type="submit" value="Comment"></input>
+        </form>
+    </div>
+    {% endif %}
 </div>
 
 {% endblock %}

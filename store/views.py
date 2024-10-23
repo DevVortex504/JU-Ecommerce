@@ -11,16 +11,11 @@ from django.contrib.auth.models import User
 
 
 class NewListingForm(forms.ModelForm):
- 
+    description = forms.CharField(widget=forms.Textarea)
+
     class Meta:
         model = Listing
-        fields = ["title", "price", "category", "listing_image"]
-
-def index(request):
-    return render(request, "store/index.html",{
-        "listings": Listing.objects.filter(active_status=True)
-    })
-
+        fields = ["title", "description", "price", "discounted_price", "category", "listing_image"]
 
 def index(request):
     return render(request, "store/index.html",{

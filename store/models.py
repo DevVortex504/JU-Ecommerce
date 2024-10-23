@@ -6,8 +6,15 @@ class Listing(models.Model):
 
     title = models.CharField(max_length=64)
     price = models.IntegerField()
+    discounted_price = models.IntegerField(blank=True, default=None)
+    description = models.CharField(max_length=300, default=None)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
-    category = models.CharField(max_length=64, blank=True)
+    CATEGORY_CHOICES = [
+        ('Tshirt', 'Tshirt'),
+        ('Hoodie', 'Hoodie'),
+        ('Back Printed', 'Back Printed'),
+    ]
+    category = models.CharField(max_length=64, choices=CATEGORY_CHOICES, blank=True)
     listing_image = models.ImageField(upload_to="images/", blank=True)
     active_status=models.BooleanField(default=True)
     #comments = models.ForeignKey(Comments, on_delete=models.CASCADE, blank=True)
