@@ -1,0 +1,27 @@
+{% extends "store/layout.html" %}
+
+{% block body %}
+    <section class="index-container">
+        <div class="listing-container">
+            <h2>Listings</h2>
+                {% for listing in listings %}
+                <div class="listing">
+                    <a href="{% url 'listings' listing.id %}"> 
+
+                            {% if listing.listing_image %}
+                                <img src="{{ listing.listing_image.url }}">
+                            {% endif %}
+                            <div class="listing-text">
+                                <h5>{{ listing.title }}</h5>
+                                <p>
+                                    ₹<span class="index-listing-price">{{ listing.price }}</span>
+                                    <span> M.R.P: <span class="mrp">₹5999</span></span>
+                                </p>
+                            </div>          
+                    </a>
+                </div>
+                {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}

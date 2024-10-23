@@ -1,0 +1,13 @@
+{% extends "store/layout.html" %}
+
+{% block body %}
+
+<ul>
+    {% for item in items %}
+    <a href="{% url 'listings' item.listing.id %}">
+        <li>{{ item.listing }}</li>
+    </a>
+    {% endfor %}
+</ul>
+
+{% endblock %}

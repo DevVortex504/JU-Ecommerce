@@ -1,0 +1,54 @@
+{% extends "store/layout.html" %}
+
+{% block body %}
+    
+<div class="listing-body">
+    <h2>{{listing.title}}</h2>
+    {% if listing.active_status == False %}
+        <h4>Listing is closed</h4>
+    {% endif %}
+
+    <ul>
+            {% if listing.listing_image %}
+                <img src="{{ listing.listing_image.url }}" style="width:50% ; float: left; margin-left: 5px;">
+            {% endif %}
+            </br>
+
+        <div class="listing-content-container">
+            <li><strong>Starting Bid: </strong>${{listing.start_bid}}</li>
+            <li><strong>Listed By: </strong>{{listing.user}}</li>
+            <li><strong>Category: </strong>{{listing.category}}</li>
+
+            {% if request.user.is_authenticated and listing.active_status %}
+                    {% if watchlist %}
+                    <a href="{% url 'watchlist_remove' listing.id %}">Remove from Watchlist</a>
+                    {% else %}
+                    <a href="{% url 'watchlist_add' listing.id %}">Add to Watchlist</a>
+                    {% endif %}
+            {% elif listing.active_status %}
+            Sign in to Watchlist.
+            {% endif %}
+
+            <li><strong>Comments: </strong></li>
+            {% if comments %}
+            {% for comment in comments %}
+                <li><p>{{comment.user}}: {{comment.content}}</p></li>
+            {% endfor %}
+            {% else %}
+                <li><p>No comments</p></li>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+            <div>            
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="content" placeholder="Type here">
+                    <input type="submit" value="Comment"></input>
+                </form>
+            </div>
+            {% endif %}
+            <br>
+        </div>
+    </ul>
+</div>
+
+{% endblock %}
