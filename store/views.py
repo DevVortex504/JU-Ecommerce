@@ -6,7 +6,7 @@ from django.urls import reverse
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Watchlist, Comments, Listing
+from .models import Watchlist, Comments, Listing, Review
 from django.contrib.auth.models import User
 
 
@@ -85,6 +85,11 @@ def register(request):
 def listing(request, listing_id):
     
     item = Listing.objects.get(pk=int(listing_id))
+    reviews = Review.objects.filter(listing=item)
+    stars = 0
+    for review in reviews:
+        stars += (review.stars)/len(reviews)
+        
     
     if request.method == "POST" and request.user.is_authenticated: 
         if content:=request.POST.get("content"):
@@ -106,6 +111,7 @@ def listing(request, listing_id):
         "comments": comments,
         "watchlist": watchlist,
         "id": int(listing_id),
+        "stars": round(stars,1),
     })
 
 @login_required

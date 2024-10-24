@@ -1,7 +1,31 @@
 {% extends "store/layout.html" %}
+{% load custom_filters %}
 
-{% block body %}
-    
+{% block head %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.size').forEach(function(size) {
+            size.addEventListener('click', function() {
+                document.querySelectorAll('.size').forEach(function(s) {
+                    s.classList.remove('active'); 
+                });
+                size.classList.add('active');
+            });
+        });
+        const colorOptions = document.querySelectorAll('.color-option');
+        colorOptions.forEach(option => {
+            option.addEventListener('click', function () {
+                colorOptions.forEach(opt => opt.classList.remove('active')); // Remove active class from all
+                this.classList.add('active'); // Add active class to the selected color
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+
+{% block body %}    
 <div class="listing-body">
     <div class="listing-image-container">
         {% if listing.listing_image %}
@@ -14,17 +38,51 @@
     </div>
         
     <div class="listing-content-container">
-        <h2>{{listing.title}}</h2>
+        <h2 class="listing-title">{{listing.title}}</h2>
         <p class="listing-description">{{listing.description}}</p>
+        <p class="listing-category"><strong>Category: </strong>{{listing.category}}</p>
         <p>
             {% if listing.discounted_price %}
-            ₹<span class="index-listing-price">{{listing.discounted_price}}</span>
-            <span><span class="mrp">₹{{listing.price}}</span></span>
+            ₹<span class="listing-price">{{listing.discounted_price}}</span>
+            <span class="listing-mrp" style="margin-left: 10px; margin-right: 10px;">₹{{listing.price}}</span>
+            <span class="listing-discount">{{ listing.price|calculate_discount:listing.discounted_price }}% OFF</span>
             {% else %}
-            ₹<span class="index-listing-price">{{listing.price}}</span>
+            ₹<span class="listing-price">{{listing.price}}</span>
             {% endif %}
+            <div class="listing-stars">
+                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                    viewBox="0 0 47.94 47.94" xml:space="preserve">
+                <path style="fill:#ED8A19;" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757
+                    c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042
+                    c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685
+                    c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528
+                    c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956
+                    C22.602,0.567,25.338,0.567,26.285,2.486z"/>
+                </svg>
+                <span>{{stars}}</span>
+            </div>
         </p>
-        <p><strong>Category: </strong>{{listing.category}}</p>
+        <div class="size-options">
+            <h5>Select Size:</h5>
+            <div class="sizes">
+                <div class="size" data-size="S">S</div>
+                <div class="size" data-size="M">M</div>
+                <div class="size" data-size="L">L</div>
+                <div class="size" data-size="XL">XL</div>
+                <div class="size" data-size="XXL">XXL</div>
+            </div>
+        </div>
+        <div class="color-container">
+            <h5>Colour: </h5>
+            <div class="color-options-container">
+                <span class="color-option" data-color="#9F6859" style="background-color: #9F6859;"></span>
+                <span class="color-option" data-color="rgb(255, 255, 255)" style="background-color: rgb(255, 255, 255);"></span>
+            </div>
+        </div>
+        <div class="buy-cart-container">
+            <a href="#"><div class="buy-btn">Buy Now</div></a>
+            <a href="#"><div class="cart-btn">🛒 Add to Cart</div></a>
+        </div>
         <p>
             {% if request.user.is_authenticated %}
                     {% if watchlist %}

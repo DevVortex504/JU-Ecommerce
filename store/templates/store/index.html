@@ -1,4 +1,5 @@
 {% extends "store/layout.html" %}
+{% load custom_filters %}
 
 {% block body %}
     <section class="index-container">
@@ -9,7 +10,9 @@
                     <a href="{% url 'listings' listing.id %}"> 
 
                             {% if listing.listing_image %}
+                            <div class="index-listing-image-container">
                                 <img src="{{ listing.listing_image.url }}">
+                            </div>
                             {% endif %}
                             <div class="listing-text">
                                 <h5>{{ listing.title }}</h5>
@@ -18,10 +21,11 @@
                                     {{ listing.description }}
                                 </p>
                                 {% endif %}
-                                <p>
+                                <p class="index-listing-price-container">
                                     {% if listing.discounted_price %}
                                     ₹<span class="index-listing-price">{{listing.discounted_price}}</span>
-                                    <span><span class="mrp">₹{{listing.price}}</span></span>
+                                    <span class="mrp">₹{{listing.price}}</span>
+                                    <span class="index-discount">{{ listing.price|calculate_discount:listing.discounted_price }}% OFF</span>
                                     {% else %}
                                     ₹<span class="index-listing-price">{{listing.price}}</span>
                                     {% endif %}
