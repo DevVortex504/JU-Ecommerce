@@ -3,51 +3,122 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>{% block title %}Store{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{% block title %}JU Ecommerce{% endblock %}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'store/styles.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=category" />
+        <script src="https://kit.fontawesome.com/4a3b1f73a2.js"></script>
         {% block head %}
         {% endblock %}
+        <script>
+            function showSidebar(){
+                const sidebar = document.querySelector(".sidebar")
+                const below = document.querySelector(".nav")
+                sidebar.style.display = "flex"
+                below.style.postion = "fixed"
+                below.style.zIndex = "0"
+            }
+            function hideSidebar(){
+                const sidebar = document.querySelector(".sidebar")
+                const below = document.querySelector(".nav")
+                sidebar.style.display = "none"
+                below.style.postion = "fixed"
+            }
+        </script>
     </head>
     <body>
-        <h1>Store</h1>
-        <div>
-            {% if request.user.is_authenticated %}
-                Signed in as <strong>{{ request.user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
-        </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-            </li>
-            {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Categories</a>
+        <nav>
+            <ul class="sidebar">
+                <li onclick=hideSidebar() class="nav-item">
+                    <a class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span></a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+                    <a class="nav-link" href="#">
+                        <span class="material-symbols-outlined">category</span>
+                        Categories
+                    </a>
+                </li>
+
+                <li class="nav-search">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="32"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+                    <form method="GET" action="#">
+                        {% csrf_token %}
+                        <input class="search" type="text" name="q" minlength="0" maxlength="100" required placeholder="Search" value="{{query}}">
+                        <!--<input type="submit">-->
+                    </form>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'new_listing' %}">Create Listing</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}"><i style="padding-right: 10px;" class="fa fa-sign-out" aria-hidden="true"></i>Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}"><i style="padding-right: 10px;" class="fa fa-sign-in" aria-hidden="true"></i>Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}"><span class="logo-first">JU</span><span class="logo-second">Ecommerce</span></a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'new_listing' %}">Create Listing</a>
+                    <a class="nav-link" href="#">
+                        <span class="material-symbols-outlined">category</span>
+                        Categories
+                    </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                <li class="nav-search">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="32"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+                    <form method="GET" action="#">
+                        {% csrf_token %}
+                        <input class="search" type="text" name="q" minlength="0" maxlength="100" required placeholder="Search" value="{{query}}">
+                        <!--<input type="submit">-->
+                    </form>
                 </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
-            {% endif %}
-        </ul>
-        <hr>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'new_listing' %}">Create Listing</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}"><i style="padding-right: 10px;" class="fa fa-sign-out" aria-hidden="true"></i>Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}"><i style="padding-right: 10px;" class="fa fa-sign-in" aria-hidden="true"></i>Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+                <li onclick=showSidebar() class="menu-button"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" width="35"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+            </ul>
+        </nav>
         {% if messages %}
 
             {% for message in messages %}
